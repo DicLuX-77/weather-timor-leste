@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="tet">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+TL Weather & Air Quality
+</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: #07111f;
+
+    color: #e5edf7;
+
+    min-height: 100vh;
+}
+
+
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b1729,
+            #102642
+        );
+
+    border-bottom:
+        1px solid #1e3853;
+
+    padding: 25px;
+}
+
+
+.header-inner {
+
+    max-width: 1450px;
+
+    margin: auto;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+
+.title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.flag {
+
+    font-size: 38px;
+}
+
+
+.title h1 {
+
+    font-size: 25px;
+
+    letter-spacing: 1px;
+}
+
+
+.subtitle {
+
+    color: #8ea6c2;
+
+    font-size: 13px;
+
+    margin-top: 5px;
+}
+
+
+.live {
+
+    color: #4ade80;
+
+    border:
+        1px solid #285b40;
+
+    background:
+        rgba(34,197,94,0.08);
+
+    border-radius: 20px;
+
+    padding:
+        6px 10px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.container {
+
+    width: 94%;
+
+    max-width: 1450px;
+
+    margin: 25px auto;
+}
+
+
+.action {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    background: #0d1b2e;
+
+    border:
+        1px solid #1c3853;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    margin-bottom: 18px;
+}
+
+
+.action-text h2 {
+
+    font-size: 17px;
+
+    margin-bottom: 5px;
+}
+
+
+.action-text p {
+
+    color: #7790aa;
+
+    font-size: 12px;
+}
+
+
+button {
+
+    border: none;
+
+    cursor: pointer;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #0284c7
+        );
+
+    padding:
+        12px 20px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+
+button:hover {
+
+    transform:
+        translateY(-1px);
+
+    filter:
+        brightness(1.1);
+}
+
+
+button:disabled {
+
+    cursor: wait;
+
+    opacity: 0.6;
+}
+
+
+.aqi-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(34,197,94,0.12);
+    color: #4ade80;
+    border: 1px solid rgba(74,222,128,0.25);
+}
+
+.aqi-status.fair { background: rgba(250,204,21,0.12); color: #fde047; border-color: rgba(250,204,21,0.25); }
+.aqi-status.moderate { background: rgba(251,146,60,0.12); color: #fdba74; border-color: rgba(251,146,60,0.25); }
+.aqi-status.poor, .aqi-status.very-poor { background: rgba(248,113,113,0.12); color: #fca5a5; border-color: rgba(248,113,113,0.25); }
+
+#statusMessage {
+
+    color: #60a5fa;
+
+    font-size: 12px;
+
+    margin-top: 6px;
+}
+
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+
+.card {
+
+    background: #0d1b2e;
+
+    border:
+        1px solid #1b344f;
+
+    border-radius: 14px;
+
+    padding: 20px;
+}
+
+
+.label {
+
+    color: #829bb5;
+
+    font-size: 12px;
+
+    margin-bottom: 10px;
+}
+
+
+.value {
+
+    font-size: 28px;
+
+    font-weight: 700;
+}
+
+
+.small {
+
+    color: #627d98;
+
+    font-size: 11px;
+
+    margin-top: 6px;
+}
+
+
+.progress {
+
+    background: #0d1b2e;
+
+    border:
+        1px solid #1b344f;
+
+    padding: 14px 18px;
+
+    border-radius: 14px;
+
+    margin-top: 12px;
+}
+
+
+.progress-head {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    margin-bottom: 10px;
+
+    font-size: 13px;
+}
+
+
+.progress-bar {
+
+    height: 9px;
+
+    background: #172a3e;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+.progress-fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #38bdf8
+        );
+
+    transition:
+        width 0.5s;
+}
+
+
+.section {
+
+    background: #0d1b2e;
+
+    border:
+        1px solid #1b344f;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-top: 15px;
+}
+
+
+.section-head {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+
+.section-head h2 {
+
+    font-size: 17px;
+}
+
+
+.section-head span {
+
+    color: #637d98;
+
+    font-size: 11px;
+}
+
+
+.analytics {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+
+.analytics-card {
+
+    background: #091625;
+
+    border:
+        1px solid #19334e;
+
+    border-radius: 11px;
+
+    padding: 16px;
+}
+
+
+.analytics-card h3 {
+
+    color: #91a9c1;
+
+    font-size: 12px;
+
+    margin-bottom: 12px;
+}
+
+
+.analytics-main {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    margin-bottom: 12px;
+}
+
+
+.analytics-values {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    color: #6c87a1;
+
+    font-size: 10px;
+}
+
+
+.table-wrapper {
+
+    overflow-x: auto;
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse:
+        collapse;
+
+    font-size: 12px;
+}
+
+
+th {
+
+    text-align: left;
+
+    color: #7089a3;
+
+    padding: 12px;
+
+    border-bottom:
+        1px solid #1c344d;
+}
+
+
+td {
+
+    padding: 13px 12px;
+
+    border-bottom:
+        1px solid #142a40;
+}
+
+
+tbody tr {
+
+    cursor: pointer;
+
+    transition: 0.15s;
+}
+
+
+tbody tr:hover {
+
+    background: #10243a;
+}
+
+
+.location {
+
+    color: #60a5fa;
+
+    font-weight: 600;
+}
+
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,0.72);
+
+    padding: 30px;
+
+    overflow-y: auto;
+}
+
+
+.modal-content {
+
+    max-width: 850px;
+
+    margin:
+        30px auto;
+
+    background: #0d1b2e;
+
+    border:
+        1px solid #27435f;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.4);
+}
+
+
+.modal-head {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    border-bottom:
+        1px solid #203b55;
+
+    padding-bottom: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+.close {
+
+    background: transparent;
+
+    font-size: 22px;
+
+    padding: 5px 10px;
+}
+
+
+.detail-title {
+
+    color: #60a5fa;
+
+    font-size: 22px;
+}
+
+
+.detail-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+
+.detail {
+
+    background: #091625;
+
+    border:
+        1px solid #19334e;
+
+    border-radius: 9px;
+
+    padding: 12px;
+}
+
+
+.detail-name {
+
+    color: #718aa4;
+
+    font-size: 10px;
+
+    margin-bottom: 5px;
+}
+
+
+.detail-value {
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.detail-section {
+
+    color: #60a5fa;
+
+    font-size: 14px;
+
+    margin:
+        18px 0 10px;
+}
+
+
+footer {
+
+    text-align: center;
+
+    color: #506981;
+
+    padding: 30px;
+
+    font-size: 11px;
+}
+
+
+@media(max-width: 1000px) {
+
+    .cards,
+    .analytics {
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+
+@media(max-width: 600px) {
+
+    .header-inner {
+
+        flex-direction: column;
+
+        align-items:
+            flex-start;
+    }
+
+
+    .cards,
+    .analytics,
+    .detail-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .action {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<div class="header-inner">
+
+<div class="title">
+
+<div class="flag">
+🇹🇱
+</div>
+
+<div>
+
+<h1>
+MONITORIZASAUN TEMPU NO KUALIDADE AR
+</h1>
+
+<div class="subtitle">
+Monitorizasaun tempu no kualidade ar iha Timor-Leste
+</div>
+
+</div>
+
+</div>
+
+
+
+
+</header>
+
+
+<main class="container">
+
+
+<!-- BUTTON -->
+
+<div class="action">
+
+<div class="action-text">
+
+<h2>
+📡 Foti Dadus Real-Time
+</h2>
+
+<p>
+Klik atu foti dadus foun hosi OpenWeather API
+no haruka ba Kafka → MongoDB.
+</p>
+
+<div id="statusMessage">
+Sistema prontu.
+</div>
+
+</div>
+
+
+<button
+id="ambilButton"
+onclick="ambilDadus()">
+
+📡 FOTI DADUS AGORA
+
+</button>
+
+</div>
+
+
+<!-- MAIN CARDS -->
+
+<div class="cards">
+
+
+<div class="card">
+
+<div class="label">
+📊 TOTAL DADUS
+</div>
+
+<div
+class="value"
+id="totalDadus">
+0
+</div>
+
+<div class="small">
+Dadus iha MongoDB
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+📍 TOTAL FATIN
+</div>
+
+<div
+class="value"
+id="totalFatin">
+0
+</div>
+
+<div class="small">
+14 fatin Timor-Leste
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+🎯 META
+</div>
+
+<div class="value">
+10,000
+</div>
+
+<div class="small">
+Dadus
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+📈 PROGRESU
+</div>
+
+<div
+class="value"
+id="progresu">
+0%
+</div>
+
+<div class="small">
+Ba meta 10,000
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- PROGRESS -->
+
+<div class="progress">
+
+<div class="progress-head">
+
+<span>
+📊 Progresu Dadus
+</span>
+
+<strong
+id="progressText">
+0 / 10,000
+</strong>
+
+</div>
+
+
+<div class="progress-bar">
+
+<div
+class="progress-fill"
+id="progressFill">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ANALYTICS -->
+
+<section class="section">
+
+<div class="section-head">
+
+<h2>
+📊 ANALÍZIKU DESKRITIVU
+</h2>
+
+<span>
+Mínimu • Máximu • Média
+</span>
+
+</div>
+
+
+<div class="analytics">
+
+
+<div class="analytics-card">
+
+<h3>
+🌡️ Temperatura
+</h3>
+
+<div
+class="analytics-main"
+id="tempMedia">
+0°C
+</div>
+
+<div class="analytics-values">
+
+<span id="tempMin">
+Min: 0
+</span>
+
+<span id="tempMax">
+Max: 0
+</span>
+
+</div>
+
+</div>
+
+
+<div class="analytics-card">
+
+<h3>
+💧 Umidade
+</h3>
+
+<div
+class="analytics-main"
+id="humMedia">
+0%
+</div>
+
+<div class="analytics-values">
+
+<span id="humMin">
+Min: 0
+</span>
+
+<span id="humMax">
+Max: 0
+</span>
+
+</div>
+
+</div>
+
+
+<div class="analytics-card">
+
+<h3>
+🟢 AQI
+</h3>
+
+<div
+class="analytics-main"
+id="aqiMedia">
+0
+</div>
+
+<div id="aqiStatus" class="aqi-status">Diak</div>
+
+<div class="analytics-values">
+
+<span id="aqiMin">
+Min: 0
+</span>
+
+<span id="aqiMax">
+Max: 0
+</span>
+
+</div>
+
+</div>
+
+
+<div class="analytics-card">
+
+<h3>
+🫁 PM2.5
+</h3>
+
+<div
+class="analytics-main"
+id="pmMedia">
+0
+</div>
+
+<div class="analytics-values">
+
+<span id="pmMin">
+Min: 0
+</span>
+
+<span id="pmMax">
+Max: 0
+</span>
+
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- LIVE DATA -->
+
+<section class="section">
+
+<div class="section-head">
+
+<h2>
+📡 DADUS FOUN LIU
+</h2>
+
+<span>
+Klik dadus atu haree detallu kompletu
+</span>
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Fatin
+</th>
+
+<th>
+Temperatura (°C)
+</th>
+
+<th>
+Umidade (%)
+</th>
+
+<th>
+Anin (m/s)
+</th>
+
+<th>
+AQI
+</th>
+
+<th>
+PM2.5 (µg/m³)
+</th>
+
+<th>
+Data no Oras
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="liveData">
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+🇹🇱 TL Weather & Air Quality Monitoring System
+
+<br>
+
+Descriptive Analytics • Kafka • MongoDB • OpenWeather
+
+</footer>
+
+
+<!-- DETAIL MODAL -->
+
+<div
+class="modal"
+id="detailModal">
+
+
+<div class="modal-content">
+
+
+<div class="modal-head">
+
+<div>
+
+<div class="detail-title"
+id="detailLocation">
+-
+</div>
+
+<div class="subtitle">
+Detalhe kompletu hosi dadus
+</div>
+
+</div>
+
+
+<button
+class="close"
+onclick="takaDetalhe()">
+
+✕
+
+</button>
+
+</div>
+
+
+<div
+id="detailContent">
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+
+let dadusCache = [];
+
+
+function formatTimestamp(value) {
+    if (!value) return "-";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return date.toLocaleString("en-GB", {
+        day: "2-digit", month: "short", year: "numeric",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        hour12: false
+    });
+}
+
+function aqiInfo(value) {
+    const n = Number(value);
+    if (n <= 1) return { label: "Diak", cls: "good" };
+    if (n === 2) return { label: "Diak loos", cls: "fair" };
+    if (n === 3) return { label: "Moderadu", cls: "moderate" };
+    if (n === 4) return { label: "Aat", cls: "poor" };
+    return { label: "Aat tebes", cls: "very-poor" };
+}
+
+/* ============================================================
+   HETAN DADUS DASHBOARD
+============================================================ */
+
+async function fotiDadus() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/live?t=" +
+                Date.now()
+            );
+
+
+        const data =
+            await response.json();
+
+
+        dadusCache =
+            data.dadus || [];
+
+
+        document
+            .getElementById(
+                "totalDadus"
+            )
+            .textContent =
+            Number(
+                data.total_dadus
+            ).toLocaleString();
+
+
+        document
+            .getElementById(
+                "totalFatin"
+            )
+            .textContent =
+            data.total_fatin;
+
+
+        document
+            .getElementById(
+                "progresu"
+            )
+            .textContent =
+            data.progresu + "%";
+
+
+        document
+            .getElementById(
+                "progressText"
+            )
+            .textContent =
+            Number(
+                data.total_dadus
+            ).toLocaleString() +
+            " / 10,000";
+
+
+        document
+            .getElementById(
+                "progressFill"
+            )
+            .style.width =
+            Math.min(
+                data.progresu,
+                100
+            ) + "%";
+
+
+        const s =
+            data.estatistika;
+
+
+        if (s.temperatura) {
+
+            document
+                .getElementById(
+                    "tempMedia"
+                )
+                .textContent =
+                s.temperatura.media +
+                "°C";
+
+
+            document
+                .getElementById(
+                    "tempMin"
+                )
+                .textContent =
+                "Min: " +
+                s.temperatura.min +
+                "°C";
+
+
+            document
+                .getElementById(
+                    "tempMax"
+                )
+                .textContent =
+                "Max: " +
+                s.temperatura.max +
+                "°C";
+
+        }
+
+
+        if (s.umidade) {
+
+            document
+                .getElementById(
+                    "humMedia"
+                )
+                .textContent =
+                s.umidade.media +
+                "%";
+
+
+            document
+                .getElementById(
+                    "humMin"
+                )
+                .textContent =
+                "Min: " +
+                s.umidade.min +
+                "%";
+
+
+            document
+                .getElementById(
+                    "humMax"
+                )
+                .textContent =
+                "Max: " +
+                s.umidade.max +
+                "%";
+
+        }
+
+
+        if (s.aqi) {
+
+            document
+                .getElementById(
+                    "aqiMedia"
+                )
+                .textContent =
+                Math.round(Number(s.aqi.media));
+
+            const aqiBadge = document.getElementById("aqiStatus");
+            if (aqiBadge) {
+                const info = aqiInfo(Math.round(Number(s.aqi.media)));
+                aqiBadge.textContent = info.label;
+                aqiBadge.className = "aqi-status " + info.cls;
+            }
+
+
+            document
+                .getElementById(
+                    "aqiMin"
+                )
+                .textContent =
+                "Min: " +
+                s.aqi.min;
+
+
+            document
+                .getElementById(
+                    "aqiMax"
+                )
+                .textContent =
+                "Max: " +
+                s.aqi.max;
+
+        }
+
+
+        if (s.pm25) {
+
+            document
+                .getElementById(
+                    "pmMedia"
+                )
+                .textContent =
+                s.pm25.media +
+                " µg/m³";
+
+
+            document
+                .getElementById(
+                    "pmMin"
+                )
+                .textContent =
+                "Min: " +
+                s.pm25.min +
+                " µg/m³";
+
+
+            document
+                .getElementById(
+                    "pmMax"
+                )
+                .textContent =
+                "Max: " +
+                s.pm25.max +
+                " µg/m³";
+
+        }
+
+
+        const table =
+            document.getElementById(
+                "liveData"
+            );
+
+
+        table.innerHTML = "";
+
+
+        dadusCache.forEach(
+            function(item, index) {
+
+
+                const weather =
+                    item.weather || {};
+
+
+                const air =
+                    item.air_quality || {};
+
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                row.onclick =
+                    function() {
+
+                        hatuduDetalhe(
+                            index
+                        );
+
+                    };
+
+
+                row.innerHTML = `
+
+                    <td class="location">
+                        ${item.location || "-"}
+                    </td>
+
+                    <td>
+                        ${weather.temperature ?? "-"}
+                    </td>
+
+                    <td>
+                        ${weather.humidity ?? "-"}
+                    </td>
+
+                    <td>
+                        ${weather.wind_speed ?? "-"}
+                    </td>
+
+                    <td>
+                        ${air.aqi == null ? "-" : Math.round(Number(air.aqi))}
+                    </td>
+
+                    <td>
+                        ${air.pm2_5 == null ? "-" : Number(air.pm2_5).toFixed(2)}
+                    </td>
+
+                    <td>
+                        ${formatTimestamp(item.timestamp)}
+                    </td>
+
+                `;
+
+
+                table.appendChild(
+                    row
+                );
+
+            }
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Sala foti dadus:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   AMBIL DADUS
+============================================================ */
+
+async function ambilDadus() {
+
+
+    const button =
+        document.getElementById(
+            "ambilButton"
+        );
+
+
+    const status =
+        document.getElementById(
+            "statusMessage"
+        );
+
+
+    button.disabled = true;
+
+
+    button.textContent =
+        "⏳ FOTI DADUS...";
+
+
+    status.textContent =
+        "📡 Sistema sei foti dadus hosi OpenWeather...";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/ambil",
+                {
+                    method: "POST"
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.status ===
+            "success"
+        ) {
+
+
+            status.textContent =
+                "✅ " +
+                result.dadus_foun +
+                " dadus foun konsege rai iha MongoDB.";
+
+
+            /*
+             * Refresh dashboard depois
+             * dadus foun tama MongoDB
+             */
+
+            await fotiDadus();
+
+
+        }
+
+        else {
+
+            status.textContent =
+                "❌ " +
+                (
+                    result.mensagem ||
+                    "Prosesu la konsege."
+                );
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        status.textContent =
+            "❌ Sala koneksaun ba servidor.";
+
+        console.error(
+            error
+        );
+
+    }
+
+
+    finally {
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            "📡 FOTI DADUS AGORA";
+
+    }
+
+}
+
+
+/* ============================================================
+   HATUDU DETAIL
+============================================================ */
+
+function hatuduDetalhe(index) {
+
+
+    const data =
+        dadusCache[index];
+
+
+    if (!data) {
+        return;
+    }
+
+
+    const weather =
+        data.weather || {};
+
+
+    const air =
+        data.air_quality || {};
+
+
+    document
+        .getElementById(
+            "detailLocation"
+        )
+        .textContent =
+        "📍 " +
+        (
+            data.location ||
+            "Unknown"
+        );
+
+
+    const content =
+        document.getElementById(
+            "detailContent"
+        );
+
+
+    content.innerHTML = `
+
+
+        <div class="detail-section">
+            🌦️ WEATHER
+        </div>
+
+
+        <div class="detail-grid">
+
+            <div class="detail">
+                <div class="detail-name">
+                    Temperatura
+                </div>
+                <div class="detail-value">
+                    ${weather.temperature ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    Umidade
+                </div>
+                <div class="detail-value">
+                    ${weather.humidity ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    Pressaun
+                </div>
+                <div class="detail-value">
+                    ${weather.pressure ?? "-"} hPa
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    Anin
+                </div>
+                <div class="detail-value">
+                    ${weather.wind_speed ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    Udan
+                </div>
+                <div class="detail-value">
+                    ${weather.rain ?? 0} mm
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    Kondisaun
+                </div>
+                <div class="detail-value">
+                    ${weather.condition ?? "-"}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="detail-section">
+            🌫️ AIR QUALITY
+        </div>
+
+
+        <div class="detail-grid">
+
+            <div class="detail">
+                <div class="detail-name">
+                    AQI
+                </div>
+                <div class="detail-value">
+                    ${air.aqi == null ? "-" : Math.round(Number(air.aqi))}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    PM2.5
+                </div>
+                <div class="detail-value">
+                    ${air.pm2_5 == null ? "-" : Number(air.pm2_5).toFixed(2)} µg/m³
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    PM10
+                </div>
+                <div class="detail-value">
+                    ${air.pm10 ?? "-"} µg/m³
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    CO
+                </div>
+                <div class="detail-value">
+                    ${air.co ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    NO
+                </div>
+                <div class="detail-value">
+                    ${air.no ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    NO2
+                </div>
+                <div class="detail-value">
+                    ${air.no2 ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    O3
+                </div>
+                <div class="detail-value">
+                    ${air.o3 ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    SO2
+                </div>
+                <div class="detail-value">
+                    ${air.so2 ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    NH3
+                </div>
+                <div class="detail-value">
+                    ${air.nh3 ?? "-"}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="detail-section">
+            📍 LOCALIZASAUN
+        </div>
+
+
+        <div class="detail-grid">
+
+            <div class="detail">
+                <div class="detail-name">
+                    Latitude
+                </div>
+                <div class="detail-value">
+                    ${data.latitude ?? "-"}
+                </div>
+            </div>
+
+
+            <div class="detail">
+                <div class="detail-name">
+                    Longitude
+                </div>
+                <div class="detail-value">
+                    ${data.longitude ?? "-"}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="detail-section">
+            🕐 TIMESTAMP
+        </div>
+
+
+        <div class="detail">
+            <div class="detail-value">
+                ${data.timestamp ?? "-"}
+            </div>
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "detailModal"
+        )
+        .style.display =
+        "block";
+
+}
+
+
+/* ============================================================
+   TAKA DETAIL
+============================================================ */
+
+function takaDetalhe() {
+
+    document
+        .getElementById(
+            "detailModal"
+        )
+        .style.display =
+        "none";
+
+}
+
+
+window.onclick =
+    function(event) {
+
+        const modal =
+            document.getElementById(
+                "detailModal"
+            );
+
+
+        if (
+            event.target ===
+            modal
+        ) {
+
+            takaDetalhe();
+
+        }
+
+    };
+
+
+/* ============================================================
+   LOAD PERTAMA
+============================================================ */
+
+fotiDadus();
+
+
+</script>
+
+
+</body>
+
+</html>
